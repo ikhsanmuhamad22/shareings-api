@@ -1,8 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const postControllers = require('../controllers/postControllers')
+const jwtAuth = require('../middleware/jwtAuth')
 
 router.post('/post', 
+  jwtAuth.verifyToken,
   postControllers.post
 )
 

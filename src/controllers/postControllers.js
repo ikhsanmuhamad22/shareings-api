@@ -2,7 +2,9 @@ const postService = require('../services/postService')
 
 exports.post = async (req, res) => {
   try {
-    const {userId, content} = req.body
+    const {content} = req.body
+    const userId = req.userId
+    console.log(userId)
     const post = await postService.posting({userId, content});
     res.status(201)
     .send({

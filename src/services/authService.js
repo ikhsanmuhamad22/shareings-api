@@ -1,14 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-exports.register = async ({name, email, password, avatar}) => {
+exports.register = async ({username, password}) => {
   try {
     const user = prisma.user.create({
       data: {
-        name: name,
-        email: email,
-        password: password,
-        avatar: avatar,
+        username,
+        password,
       }
     })
     return user;
@@ -17,14 +15,28 @@ exports.register = async ({name, email, password, avatar}) => {
   }
 };
 
-exports.register = async ({email, password}) => {
+exports.verifyUsername = async ({username}) => {
+  const duplicate = await prisma.user.findUnique({
+    where: {
+      username
+    }
+  })
+  if(duplicate) {
+    throw new Error('username sudah digunakan')
+  }
+}
+
+exports.login = async ({username, password}) => {
   try {
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
-        email: email,
-        password: password
+        username,
+        password,
       }
     })
+    if (!user) {
+      throw new Error('Pengguna tidak ditemukan');
+    }
     return user;
   } catch (error) {
     throw new Error(error.message);

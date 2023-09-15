@@ -1,4 +1,4 @@
-const { jwt } = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 exports.verifyToken = (req, res, next) => {
   const tokenHeader = req.headers.authorization;
@@ -40,5 +40,5 @@ exports.verifyToken = (req, res, next) => {
 };
 
 exports.createToken = (id) => {
-  return jwt.sign({ username }, secretKey, { expiresIn: '1h' });
+  return jwt.sign({id}, process.env.SECRET, { expiresIn: '24h' });
 }
