@@ -1,17 +1,18 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+const express = require('express');
+const authRoutes = require('./routes/authRoutes');
+const postRoutes = require('./routes/postRoutes');
+const bodyParser = require('body-parser');
+require('dotenv').config()
 
 const app = express();
-const port = process.env.PORT  || 3000;
+const port = process.env.PORT;
 
-app.get('/', async (req, res) => {
-  try {
-    res.send('ini cuma testing');
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+
+app.use('/auth', authRoutes)
+app.use('/post', postRoutes)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
