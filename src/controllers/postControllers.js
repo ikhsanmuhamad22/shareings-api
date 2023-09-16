@@ -4,7 +4,6 @@ exports.post = async (req, res) => {
   try {
     const {content} = req.body
     const userId = req.userId
-    console.log(userId)
     const post = await postService.posting({userId, content});
     res.status(201)
     .send({
@@ -63,13 +62,14 @@ exports.getPostBylikes = async (req, res) => {
 exports.deletePostByid = async (req, res) => {
   try {
     const id = parseInt(req.params.id)
-    await postService.deletePostByid({id});
+    const userId = req.userId
+    await postService.deletePostByid({id, userId});
     res.status(201)
     .send({
       message: 'berhasil menghapus postingan',
     })
   } catch (error) {
     console.error(error.message); 
-    res.status(500).json({ message: 'Terjadi kesalahan dalam mengolah permintaan Anda' });
+    res.status(500).json({ message: error.message });
   }
 };

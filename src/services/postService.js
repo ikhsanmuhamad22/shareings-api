@@ -50,14 +50,22 @@ exports.getPostBylikes = async () => {
   }
 };
 
-exports.deletePostByid = async ({id}) => {
+exports.deletePostByid = async ({id, userId}) => {
   try {
-    const post = await prisma.post.delete({
+    const user = await prisma.user.findFirst({
       where: {
-        id
+        id: userId
       }
     })
-    return post;
+    const post = await prisma.post.delete({
+      where: {
+        id,
+        userId: user.id
+      }
+    })
+    if(!post) {
+      throw new Error('maaf anda tidak punya berhak')
+    }
   } catch (error) {
     throw new Error(error.message);
   }

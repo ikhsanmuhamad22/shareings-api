@@ -17,7 +17,8 @@ router.get('/getPostById/:id',
 router.get('/getPostBylikes', 
   postControllers.getPostBylikes
 )
-router.delete('/deletePostById/:id', 
+router.delete('/deletePostById/:id',
+  jwtAuth.verifyToken,
   postControllers.deletePostByid
 )
 

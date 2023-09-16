@@ -1,11 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-exports.comments = async ({userId, comment}) => {
+exports.createComment = async ({userId, postId, comment}) => {
   try {
     const data = await prisma.comment.create({
       data: {
         userId,
+        postId,
         comment
       }
     })
@@ -15,13 +16,22 @@ exports.comments = async ({userId, comment}) => {
   }
 };
 
-exports.comments = async ({id}) => {
+exports.deleteComment = async ({id, userId}) => {
   try {
-    await prisma.comment.delete({
+    const user = await prisma.user.findFirst({
       where: {
-        id
+        id: userId
       }
     })
+    const comment = await prisma.comment.delete({
+      where: {
+        id,
+        userId: user.id
+      }
+    })
+    if(!comment) {
+      throw new Error('maaf anda tidak punya berhak')
+    }
   } catch (error) {
     throw new Error(error.message);
   }
