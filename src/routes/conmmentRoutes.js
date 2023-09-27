@@ -1,17 +1,19 @@
-const express = require('express')
-const commetsControllers = require('../controllers/commentsControllers')
-const jwtAuth = require('../middleware/jwtAuth')
-const router = express.Router()
+const express = require('express');
+const commetsControllers = require('../controllers/commentsControllers');
+const jwtAuth = require('../middleware/jwtAuth');
 
-router.post('/createComment/:postId',
+const router = express.Router();
+
+router.post(
+  '/createComment/:postId',
   jwtAuth.verifyToken,
-  commetsControllers.createComment
-)
+  commetsControllers.createComment,
+);
 
-router.delete('/deleteCommentById/:id', 
+router.delete(
+  '/deleteCommentById/:id',
   jwtAuth.verifyToken,
-  commetsControllers.deleteComment
-)
+  commetsControllers.deleteComment,
+);
 
-
-module.exports = router
+module.exports = router;
