@@ -1,13 +1,15 @@
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 
 exports.register = async ({ username, password, gender }) => {
   try {
-    const user = prisma.user.create({
+    const hashPassword = await bcrypt.hash(password, 10);
+    const user = prisma.users.create({
       data: {
         username,
-        password,
+        password: hashPassword,
         gender,
       },
     });
@@ -18,7 +20,7 @@ exports.register = async ({ username, password, gender }) => {
 };
 
 exports.verifyUsername = async ({ username }) => {
-  const duplicate = await prisma.user.findUnique({
+  const duplicate = await prisma.users.findUnique({
     where: {
       username,
     },
@@ -30,16 +32,22 @@ exports.verifyUsername = async ({ username }) => {
 
 exports.login = async ({ username, password }) => {
   try {
-    const user = await prisma.user.findUnique({
+    const data = await prisma.users.findUnique({
       where: {
         username,
-        password,
       },
     });
-    if (!user) {
+    if (!data) {
       throw new Error('Pengguna tidak ditemukan');
     }
-    return user;
+    const passwordIsValid = bcrypt.compareSync(
+      password,
+      data.password,
+    );
+    if (!passwordIsValid) {
+      throw new Error('Password anda salah');
+    }
+    return data;
   } catch (error) {
     throw new Error(error.message);
   }
