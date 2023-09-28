@@ -1,5 +1,5 @@
 const express = require('express');
-const commetsControllers = require('../controllers/commentsControllers');
+const commetsControllers = require('../controllers/commentControllers');
 const jwtAuth = require('../middleware/jwtAuth');
 
 const router = express.Router();

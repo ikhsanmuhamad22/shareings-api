@@ -17,22 +17,37 @@ model Users {
   gender   String
   posts    Posts[]
   comment  Comments[]
+  like     Likes[]
 }
 
 model Posts {
-  id       Int        @id @default(autoincrement())
-  content  String
-  likes    Int?       @default(0)
-  users    Users      @relation(fields: [userId], references: [id])
-  userId   Int
-  comments Comments[]
+  id        Int        @id @default(autoincrement())
+  content   String
+  likes     Likes[]
+  users     Users      @relation(fields: [userId], references: [id])
+  userId    Int
+  comments  Comments[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Comments {
-  id      Int    @id @default(autoincrement())
-  comment String
-  user    Users  @relation(fields: [userId], references: [id])
-  userId  Int
-  post    Posts  @relation(fields: [postId], references: [id])
-  postId  Int
+  id        Int      @id @default(autoincrement())
+  comment   String
+  user      Users    @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Posts    @relation(fields: [postId], references: [id])
+  postId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Likes {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  postId    Int
+  users     Users    @relation(fields: [userId], references: [id])
+  posts     Posts    @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
