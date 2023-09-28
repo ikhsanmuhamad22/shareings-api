@@ -5,7 +5,7 @@ const postControllers = require('../controllers/postControllers');
 const jwtAuth = require('../middleware/jwtAuth');
 
 router.post(
-  '/post',
+  '/createPost',
   jwtAuth.verifyToken,
   postControllers.post,
 );

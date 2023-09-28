@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 exports.posting = async ({ userId, content }) => {
   try {
-    const post = await prisma.post.create({
+    const post = await prisma.posts.create({
       data: {
         userId,
         content,
@@ -18,7 +18,7 @@ exports.posting = async ({ userId, content }) => {
 
 exports.getAllPost = async () => {
   try {
-    const post = await prisma.post.findMany();
+    const post = await prisma.posts.findMany();
     return post;
   } catch (error) {
     throw new Error(error.message);
@@ -27,10 +27,9 @@ exports.getAllPost = async () => {
 
 exports.getPostById = async ({ id }) => {
   try {
-    const post = await prisma.post.findFirst({
-      where: {
-        id,
-      },
+    const post = await prisma.posts.findFirst({
+      where: { id },
+      include: { comment: { select: { comment: true } } },
     });
     return post;
   } catch (error) {
@@ -40,7 +39,7 @@ exports.getPostById = async ({ id }) => {
 
 exports.getPostBylikes = async () => {
   try {
-    const post = await prisma.post.findMany({
+    const post = await prisma.posts.findMany({
       orderBy: {
         likes: 'desc',
       },
@@ -53,15 +52,18 @@ exports.getPostBylikes = async () => {
 
 exports.deletePostByid = async ({ id, userId }) => {
   try {
-    const user = await prisma.user.findFirst({
-      where: {
-        id: userId,
-      },
-    });
-    const post = await prisma.post.delete({
+    const post = await prisma.posts.findFirst({
       where: {
         id,
-        userId: user.id,
+        userId,
+      },
+    });
+    if (!post) {
+      throw new Error('Post tidak ditemukan atau Anda tidak memiliki hak untuk menghapus postingan ini ');
+    }
+    await prisma.posts.delete({
+      where: {
+        id,
       },
     });
     if (!post) {

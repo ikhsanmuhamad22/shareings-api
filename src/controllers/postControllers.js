@@ -37,11 +37,11 @@ exports.getAllPost = async (req, res) => {
 exports.getPostById = async (req, res) => {
   try {
     const id = parseFloat(req.params.id);
-    const post = await postService.getPostById({ id });
+    const data = await postService.getPostById({ id });
     res.status(200)
       .send({
         message: 'berhasil mendapatkan data',
-        post,
+        data,
       });
   } catch (error) {
     res.status(500).json({
@@ -78,8 +78,7 @@ exports.deletePostByid = async (req, res) => {
       });
   } catch (error) {
     res.status(500).json({
-      message: 'Terjadi kesalahan dalam mengolah permintaan Anda',
-      error: error.message,
+      message: error.message,
     });
   }
 };
