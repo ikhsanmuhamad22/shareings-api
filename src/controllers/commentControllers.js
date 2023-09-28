@@ -1,11 +1,11 @@
-const commentsService = require('../services/commentsService');
+const commentService = require('../services/commentService');
 
 exports.createComment = async (req, res) => {
   try {
     const postId = parseFloat(req.params.postId);
     const { comment } = req.body;
     const { userId } = req;
-    const data = await commentsService.createComment({ userId, postId, comment });
+    const data = await commentService.createComment({ userId, postId, comment });
     res.status(201)
       .send({
         message: 'berhasil membuat komentar',
@@ -23,7 +23,7 @@ exports.deleteComment = async (req, res) => {
   try {
     const id = parseFloat(req.params.id);
     const { userId } = req;
-    await commentsService.deleteComment({ id, userId });
+    await commentService.deleteComment({ id, userId });
     res.status(201)
       .send({
         message: 'berhasil menghapush komentar',

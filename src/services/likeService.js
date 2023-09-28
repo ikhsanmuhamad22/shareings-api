@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-exports.like = async ({ postId, userId }) => {
+exports.likePost = async ({ postId, userId }) => {
   const existingLike = await prisma.likes.findFirst({
     where: {
       postId,
@@ -27,7 +27,7 @@ exports.like = async ({ postId, userId }) => {
   return { message: 'Post liked' };
 };
 
-exports.getLikeCountPerPost = async (postId) => {
+exports.getLikeCountPerPost = async ({ postId }) => {
   const likeCount = await prisma.likes.count({
     where: {
       postId,

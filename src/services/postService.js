@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { getLikeCountPerPost } = require('./likeService');
 
 const prisma = new PrismaClient();
 
@@ -29,7 +30,7 @@ exports.getPostById = async ({ id }) => {
   try {
     const post = await prisma.posts.findFirst({
       where: { id },
-      include: { comment: { select: { comment: true } } },
+      include: { comments: { select: { comment: true } } },
     });
     return post;
   } catch (error) {
@@ -39,12 +40,18 @@ exports.getPostById = async ({ id }) => {
 
 exports.getPostBylikes = async () => {
   try {
-    const post = await prisma.posts.findMany({
-      orderBy: {
-        likes: 'desc',
-      },
-    });
-    return post;
+    const posts = await prisma.posts.findMany();
+    const postsWithLikeCount = await Promise.all(
+      posts.map(async (post) => {
+        const likeCount = await getLikeCountPerPost({ postId: post.id });
+        return {
+          ...post,
+          likeCount,
+        };
+      }),
+    );
+    postsWithLikeCount.sort((a, b) => b.likeCount - a.likeCount);
+    return postsWithLikeCount;
   } catch (error) {
     throw new Error(error);
   }

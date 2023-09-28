@@ -5,13 +5,13 @@ const likeController = require('../controllers/likeControllers');
 const jwtAuth = require('../middleware/jwtAuth');
 
 router.post(
-  '/like',
+  '/likePost/:postId',
   jwtAuth.verifyToken,
-  likeController.like,
+  likeController.likePost,
 );
 
 router.get(
-  '/like',
+  '/getLikePost/:postId',
   likeController.getLikeCountPerPost,
 );
 
