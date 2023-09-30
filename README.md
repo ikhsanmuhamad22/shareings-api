@@ -4,9 +4,9 @@ This is an API for My Shareings App, built with Express JS and using the prisma 
 
 ## Main Endpoint
 **auth:** `/auth/[endpoint]`<br>
-**pot:** `/api/[endpoint]`<br>
-**comment:** `/api/[endpoint]`<br>
-**like:** `/api/[endpoint]`<br>
+**post:** `/post/[endpoint]`<br>
+**comment:** `/comment/[endpoint]`<br>
+**like:** `/like/[endpoint]`<br>
 
 ## Endpoint Description
 
