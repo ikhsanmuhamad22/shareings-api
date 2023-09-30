@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "module": "CommonJS",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "start": "nodemon src/app.js"
   },
