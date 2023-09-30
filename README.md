@@ -33,7 +33,7 @@ to create comment data and manipulate that data
 **POST:** `/comment/createComment/:postId`<br>
 **DELETE:** `/comment/deleteCommentById/:id`<br>
 
-###likes
+### likes
 
 for data like purposes
 
