@@ -1,32 +1,33 @@
-const authService = require("../services/authService");
-
+const authService = require('../services/authService');
+const verifyToken = require('../middleware/jwtAuth');
 
 exports.register = async (req, res) => {
   try {
-    const {name , email, password, avatar} = req.body
-    const user = await authService.register({name, email, password, avatar});
-    console.log(user)
+    const { username, password, gender } = req.body;
+    await authService.verifyUsername({ username });
+    const data = await authService.register({ username, password, gender });
     res.status(201)
-    .send({
-      message: 'berhasil membuat akun',
-      user
-    })
+      .send({
+        message: 'berhasil membuat akun',
+        data,
+      });
   } catch (error) {
-    console.error(error.message); 
-    res.status(500).json({ message: 'Terjadi kesalahan dalam mengolah permintaan Anda' });
+    res.status(500).json({ message: error.message });
   }
 };
 
 exports.login = async (req, res) => {
   try {
-    const {email, password} = req.body
-    const user = await authService.register({ email, password,});
+    const { username, password } = req.body;
+    const data = await authService.login({ username, password });
+    const token = verifyToken.createToken(data.id);
     res.status(201)
-    .send({
-      message: 'berhasil login',
-      user
-    })  } catch (error) {
-    console.error(error.message); 
-    res.status(500).json({ message: 'Terjadi kesalahan dalam mengolah permintaan Anda' });
+      .send({
+        message: 'berhasil login',
+        data,
+        token,
+      });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
