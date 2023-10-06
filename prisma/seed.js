@@ -27,9 +27,15 @@ const users = [
 
 // Seeder untuk tabel Posts
 const posts = [
-  { id: 1, content: 'Hi apa kabar, Perkanalkan nih nama saya ikhsan', userId: 1 },
-  { id: 2, content: 'Makan apa kalian pagi ini', userId: 2 },
-  { id: 3, content: 'Kalo aku sih tempe aja udah cukup', userId: 2 },
+  {
+    id: 1, content: 'Hi apa kabar, Perkanalkan nih nama saya ikhsan', to: 'people all', userId: 1,
+  },
+  {
+    id: 2, content: 'Makan apa kalian pagi ini', to: 'people all', userId: 2,
+  },
+  {
+    id: 3, content: 'Kalo aku sih tempe aja udah cukup', to: 'people all', userId: 2,
+  },
 
 ];
 
@@ -80,7 +86,7 @@ function makePosts() {
     Promise.all(
       posts.map(async (n) => {
         await prisma.posts.create({
-          data: { content: n.content, userId: n.userId },
+          data: { content: n.content, to: n.to, userId: n.userId },
         });
       }),
     );
