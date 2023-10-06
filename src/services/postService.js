@@ -3,12 +3,13 @@ const { getLikeCountPerPost } = require('./likeService');
 
 const prisma = new PrismaClient();
 
-exports.posting = async ({ userId, content }) => {
+exports.posting = async ({ userId, content, to }) => {
   try {
     const post = await prisma.posts.create({
       data: {
         userId,
         content,
+        to,
       },
     });
     return post;

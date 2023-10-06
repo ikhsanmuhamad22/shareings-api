@@ -2,9 +2,9 @@ const postService = require('../services/postService');
 
 exports.post = async (req, res) => {
   try {
-    const { content } = req.body;
+    const { content, to } = req.body;
     const { userId } = req;
-    const post = await postService.posting({ userId, content });
+    const post = await postService.posting({ userId, content, to });
     res.status(201)
       .send({
         message: 'berhasil posting status',

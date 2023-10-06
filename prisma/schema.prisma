@@ -27,6 +27,7 @@ model Posts {
   users     Users      @relation(fields: [userId], references: [id])
   userId    Int
   comments  Comments[]
+  to        String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
