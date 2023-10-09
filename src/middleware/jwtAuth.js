@@ -40,3 +40,20 @@ exports.verifyToken = (req, res, next) => {
 };
 
 exports.createToken = (id) => jwt.sign({ id }, process.env.SECRET, { expiresIn: '24h' });
+
+exports.authenticateToken = (req, res, next) => {
+  const bearerHeader = req.headers.authorization;
+
+  if (typeof bearerHeader !== 'undefined') {
+    const bearerToken = bearerHeader.split(' ')[1];
+    jwt.verify(bearerToken, process.env.SECRET, (err, decoded) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      req.userId = decoded.id;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};

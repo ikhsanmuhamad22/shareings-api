@@ -1,6 +1,6 @@
 const express = require('express');
 const authControllers = require('../controllers/authControllers');
-const { authenticateToken } = require('../middleware/jwtAuth');
+const jwtAuth = require('../middleware/jwtAuth');
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.post(
 
 router.get(
   '/user',
-  authenticateToken,
+  jwtAuth.authenticateToken,
   authControllers.user,
 );
 
