@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
         data,
       });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -21,11 +21,28 @@ exports.login = async (req, res) => {
     const { username, password } = req.body;
     const data = await authService.login({ username, password });
     const token = verifyToken.createToken(data.id);
-    res.status(201)
+    res.status(200)
       .send({
-        message: 'berhasil login',
+        status: 'success',
+        data: {
+          type: 'bearer',
+          token,
+          refreshToken: null,
+        },
+      });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.user = async (req, res) => {
+  try {
+    const id = req.userId;
+    const data = await authService.user({ id });
+    res.status(200)
+      .send({
+        status: 'success',
         data,
-        token,
       });
   } catch (error) {
     res.status(500).json({ message: error.message });

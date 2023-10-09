@@ -1,5 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
+const InvariantError = require('../exeptions/InvariantError');
+const AuthenticationError = require('../exeptions/AuthenticationError');
 
 const prisma = new PrismaClient();
 
@@ -26,7 +28,7 @@ exports.verifyUsername = async ({ username }) => {
     },
   });
   if (duplicate) {
-    throw new Error('username sudah digunakan');
+    throw new InvariantError('username sudah digunakan');
   }
 };
 
@@ -38,15 +40,28 @@ exports.login = async ({ username, password }) => {
       },
     });
     if (!data) {
-      throw new Error('Pengguna tidak ditemukan');
+      throw new AuthenticationError('Pengguna tidak ditemukan');
     }
     const passwordIsValid = bcrypt.compareSync(
       password,
       data.password,
     );
     if (!passwordIsValid) {
-      throw new Error('Password anda salah');
+      throw new InvariantError('Password anda salah');
     }
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+exports.user = async ({ id }) => {
+  try {
+    const data = await prisma.users.findUnique({
+      where: {
+        id,
+      },
+    });
     return data;
   } catch (error) {
     throw new Error(error.message);
