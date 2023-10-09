@@ -1,5 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const { getLikeCountPerPost } = require('./likeService');
+const NotFoundError = require('../exeptions/NotFoundError');
+const AuthorizationError = require('../exeptions/AuthorizationError');
 
 const prisma = new PrismaClient();
 
@@ -20,7 +22,15 @@ exports.posting = async ({ userId, content, to }) => {
 
 exports.getAllPost = async () => {
   try {
-    const post = await prisma.posts.findMany();
+    const post = await prisma.posts.findMany({
+      include: {
+        users: {
+          select: {
+            username: true,
+          },
+        },
+      },
+    });
     return post;
   } catch (error) {
     throw new Error(error.message);
@@ -31,7 +41,14 @@ exports.getPostById = async ({ id }) => {
   try {
     const post = await prisma.posts.findFirst({
       where: { id },
-      include: { comments: { select: { comment: true } } },
+      include: {
+        users: {
+          select: {
+            username: true,
+          },
+        },
+        comments: { select: { comment: true } },
+      },
     });
     return post;
   } catch (error) {
@@ -41,7 +58,15 @@ exports.getPostById = async ({ id }) => {
 
 exports.getPostBylikes = async () => {
   try {
-    const posts = await prisma.posts.findMany();
+    const posts = await prisma.posts.findMany({
+      include: {
+        users: {
+          select: {
+            username: true,
+          },
+        },
+      },
+    });
     const postsWithLikeCount = await Promise.all(
       posts.map(async (post) => {
         const likeCount = await getLikeCountPerPost({ postId: post.id });
@@ -54,7 +79,7 @@ exports.getPostBylikes = async () => {
     postsWithLikeCount.sort((a, b) => b.likeCount - a.likeCount);
     return postsWithLikeCount;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message);
   }
 };
 
@@ -67,7 +92,7 @@ exports.deletePostByid = async ({ id, userId }) => {
       },
     });
     if (!post) {
-      throw new Error('Post tidak ditemukan atau Anda tidak memiliki hak untuk menghapus postingan ini ');
+      throw new NotFoundError('Post tidak ditemukan atau Anda tidak memiliki hak untuk menghapus postingan ini ');
     }
     await prisma.posts.delete({
       where: {
@@ -75,7 +100,7 @@ exports.deletePostByid = async ({ id, userId }) => {
       },
     });
     if (!post) {
-      throw new Error('maaf anda tidak punya berhak');
+      throw new AuthorizationError('maaf anda tidak punya berhak');
     }
   } catch (error) {
     throw new Error(error.message);
