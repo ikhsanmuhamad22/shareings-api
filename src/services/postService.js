@@ -47,7 +47,16 @@ exports.getPostById = async ({ id }) => {
             username: true,
           },
         },
-        comments: { select: { comment: true } },
+        comments: {
+          select: {
+            comment: true,
+            user: {
+              select: {
+                username: true,
+              },
+            },
+          },
+        },
       },
     });
     return post;
