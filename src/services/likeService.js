@@ -35,3 +35,16 @@ exports.getLikeCountPerPost = async ({ postId }) => {
   });
   return likeCount;
 };
+
+exports.getLikeByUserId = async ({ postId, userId }) => {
+  const data = await prisma.likes.findFirst({
+    where: {
+      postId,
+      userId,
+    },
+  });
+  if (data) {
+    return true;
+  }
+  return false;
+};

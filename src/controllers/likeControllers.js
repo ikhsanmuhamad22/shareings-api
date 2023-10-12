@@ -33,3 +33,21 @@ exports.getLikeCountPerPost = async (req, res) => {
     });
   }
 };
+
+exports.getLikeByUserId = async (req, res) => {
+  try {
+    const { userId } = req;
+    const postId = parseFloat(req.params.postId);
+    const data = await likeService.getLikeByUserId({ postId, userId });
+    res.status(201)
+      .send({
+        message: 'berhasil mengambil data',
+        data,
+      });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Terjadi kesalahan dalam mengolah permintaan Anda',
+      error: error.message,
+    });
+  }
+};
