@@ -15,4 +15,10 @@ router.get(
   likeController.getLikeCountPerPost,
 );
 
+router.get(
+  '/getLikePostById/:postId',
+  jwtAuth.authenticateToken,
+  likeController.getLikeByUserId,
+);
+
 module.exports = router;

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -24,7 +21,7 @@ model Posts {
   id        Int        @id @default(autoincrement())
   content   String
   likes     Likes[]
-  users     Users      @relation(fields: [userId], references: [id])
+  users     Users      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   comments  Comments[]
   to        String
@@ -35,9 +32,9 @@ model Posts {
 model Comments {
   id        Int      @id @default(autoincrement())
   comment   String
-  user      Users    @relation(fields: [userId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  post      Posts    @relation(fields: [postId], references: [id])
+  post      Posts    @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,8 +44,8 @@ model Likes {
   id        Int      @id @default(autoincrement())
   userId    Int
   postId    Int
-  users     Users    @relation(fields: [userId], references: [id])
-  posts     Posts    @relation(fields: [postId], references: [id])
+  users     Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts     Posts    @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
